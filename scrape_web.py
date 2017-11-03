@@ -3,13 +3,10 @@
 
 import urllib3
 import certifi
-import logging
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 
 def scrape(url):
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
-
     # SSL enabled because urllib3 is unhappy otherwise...
     # Plus it's good practice so why not right?
     http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
@@ -23,8 +20,7 @@ def scrape(url):
     text = soup.findAll(text=True)
     visibleText = filter(visible, text)
 
-    # This will retain formatting. I can strip whitespace if need be.
-    return ' '.join(visibleText)
+    return str(' '.join(word.strip() for word in visibleText))
 
 # Only grab visible text on the page
 def visible(element):
